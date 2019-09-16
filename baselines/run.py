@@ -15,6 +15,13 @@ from baselines import logger
 from importlib import import_module
 
 from cartpole import cartpole_train 
+from pendulum import pendulum_train
+from pendulum import pendulum_test
+from pendulum import pendulum_test1
+from mountain_car import mountain_car_train 
+from mountain_car import mountain_car_test
+from car_retrieval import car_retrieval_train
+from car_retrieval import car_retrieval_test 
 try:
     from mpi4py import MPI
 except ImportError:
