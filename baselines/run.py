@@ -22,6 +22,7 @@ from mountain_car import mountain_car_train
 from mountain_car import mountain_car_test
 from car_retrieval import car_retrieval_train
 from car_retrieval import car_retrieval_test 
+from pdb import set_trace
 try:
     from mpi4py import MPI
 except ImportError:
@@ -66,6 +67,7 @@ def train(args, extra_args):
     seed = args.seed
 
     learn = get_learn_function(args.alg)
+    # set_trace()
     alg_kwargs = get_learn_function_defaults(args.alg, env_type)
     alg_kwargs.update(extra_args)
 

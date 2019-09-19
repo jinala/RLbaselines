@@ -6,6 +6,8 @@ from baselines import logger
 from collections import deque
 from baselines.common import explained_variance, set_global_seeds
 from baselines.common.policies import build_policy
+from pdb import set_trace
+
 try:
     from mpi4py import MPI
 except ImportError:
@@ -76,7 +78,6 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
 
 
     '''
-
     set_global_seeds(seed)
 
     if isinstance(lr, float): lr = constfn(lr)
@@ -85,6 +86,7 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
     else: assert callable(cliprange)
     total_timesteps = int(total_timesteps)
 
+    # set_trace()
     policy = build_policy(env, network, **network_kwargs)
 
     # Get the nb of env
@@ -127,6 +129,7 @@ def learn(*, network, env, total_timesteps, eval_env = None, seed=None, nsteps=2
 
     nupdates = total_timesteps//nbatch
     for update in range(1, nupdates+1):
+        # set_trace()
         assert nbatch % nminibatches == 0
         # Start timer
         tstart = time.perf_counter()
