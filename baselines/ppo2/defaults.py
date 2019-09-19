@@ -37,7 +37,7 @@ def atari():
 def retro():
     return atari()
 
-def acar_retrieval_train():
+def car_retrieval_train():
     lr = unif_range(0.003, 5e-6)
     return dict(
         # horizon = rand_int_linspace(32, 500),
