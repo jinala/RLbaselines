@@ -35,8 +35,7 @@ def main(args):
 '''
 Complete n subs, executing at mosmt maxn at once
 
-python -m baselines.run --alg=ppo2 --env=CarRetrievalTrain-v0 --num_timesteps=1e6
-logs to logfile
+python batchrun.py num_runs=2 log_path="ok"
 '''
 def runjobs(num_runs = 2, log_path = 'myfile', alg = "ppo2", env = "CarRetrievalTrain-v0", num_timesteps="1e6", **kwargs):
   for i in range(num_runs):
@@ -46,11 +45,13 @@ def runjobs(num_runs = 2, log_path = 'myfile', alg = "ppo2", env = "CarRetrieval
     os.mkdir(run_log_path)
     print("Saving to {}".format(run_log_path))
     program = ["python", "-m", "baselines.run",
-               "alg={}".format(alg),
-               "env={}".format(env),
-               "num_timesteps={}".format(num_timesteps),
-               "log_path={}".format(run_log_path),
-               "save_path={}".format(run_log_path)]
+               "--alg={}".format(alg),
+               "--env={}".format(env),
+               "--num_timesteps={}".format(num_timesteps),
+               "--log_path={}".format(run_log_path),
+               "--save_path={}".format(path.join(run_log_path, "model.pkl"))]
+
+    print(program)
 
     with open(path.join(run_log_path, "std.out"), "w") as outfile:
       res = subprocess.Popen(program, stdout=outfile, stderr=outfile)
