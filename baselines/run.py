@@ -208,6 +208,71 @@ def configure_logger(log_path, **kwargs):
     else:
         logger.configure(**kwargs)
 
+def eval_trained_model(model, env):
+    obs = env.reset()
+
+    state = model.initial_state if hasattr(model, 'initial_state') else None
+    
+    num_episodes = 1000 
+
+    num_safe = 0
+    total_goal_error = 0
+    total_time_safe = 0
+    total_time_to_goal = 0
+    total_rew = 0 
+
+    for ep in range(num_episodes):
+        episode_rew = 0
+        episode_safe_error = 0
+        episode_goal_error = 0
+        episode_time_safe = 0
+        episode_total_time = 0
+        while True:
+            if state is not None:
+                actions, _, state, _ = model.step(obs,S=state, M=dones)
+            else:
+                actions, _, _, _ = model.step(obs)
+
+            obs, rew, done, _ = env.step(actions)
+            episode_rew += rew[0] if isinstance(env, VecEnv) else rew
+            safe_err = env.get_safe_error()
+            episode_safe_error += safe_err[0] if isinstance(env, VecEnv) else safe_err 
+
+            dt = env.get_dt()
+            dt = dt[0] if isinstance(env, VecEnv) else dt 
+
+            if episode_safe_error < 0.05:
+                episode_time_safe += dt
+
+            episode_total_time += dt 
+
+            #env.render()
+            done = done.any() if isinstance(done, np.ndarray) else done
+            if done:
+                
+                goal_err = env.get_goal_error()
+                episode_goal_error = goal_err[0] if isinstance(env, VecEnv) else goal_err
+                obs = env.reset()
+
+                print(ep, ":", episode_rew, episode_safe_error, episode_time_safe, episode_goal_error, episode_total_time)
+
+                if episode_safe_error < 0.05:
+                    num_safe += 1
+
+                total_goal_error += episode_goal_error 
+                total_time_safe += episode_time_safe
+                total_time_to_goal += episode_total_time
+                total_rew += episode_rew
+                break 
+
+    num_safe = num_safe/float(num_episodes)
+    total_goal_error = total_goal_error/float(num_episodes)
+    total_time_safe = total_time_safe/float(num_episodes)
+    total_time_to_goal = total_time_to_goal/float(num_episodes)
+    total_rew = total_rew/float(num_episodes)
+
+    print("Average: ", total_rew, num_safe, total_time_safe, total_goal_error, total_time_to_goal)
+    return
 
 def main(args):
     # configure logger, disable logging in child MPI processes (with rank > 0)
@@ -254,6 +319,9 @@ def main(args):
                 print('episode_rew={}'.format(episode_rew))
                 episode_rew = 0
                 obs = env.reset()
+    if args.eval:
+        logger.log("Evaluating trained model")
+        eval_trained_model(model, env)
 
     env.close()
 

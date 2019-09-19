@@ -24,6 +24,9 @@ class DummyVecEnv(VecEnv):
         self.buf_obs = { k: np.zeros((self.num_envs,) + tuple(shapes[k]), dtype=dtypes[k]) for k in self.keys }
         self.buf_dones = np.zeros((self.num_envs,), dtype=np.bool)
         self.buf_rews  = np.zeros((self.num_envs,), dtype=np.float32)
+        self.buf_safe_errs = np.zeros((self.num_envs,), dtype=np.float32)
+        self.buf_goal_errs = np.zeros((self.num_envs,), dtype=np.float32)
+        self.buf_dts = np.zeros((self.num_envs,), dtype=np.float32)
         self.buf_infos = [{} for _ in range(self.num_envs)]
         self.actions = None
         self.spec = self.envs[0].spec
@@ -54,6 +57,24 @@ class DummyVecEnv(VecEnv):
             self._save_obs(e, obs)
         return (self._obs_from_buf(), np.copy(self.buf_rews), np.copy(self.buf_dones),
                 self.buf_infos.copy())
+
+    def get_safe_error(self):
+        for e in range(self.num_envs):
+            self.buf_safe_errs[e] = self.envs[e].get_safe_error()
+        return np.copy(self.buf_safe_errs)
+
+
+    def get_goal_error(self):
+        for e in range(self.num_envs):
+            self.buf_goal_errs[e] = self.envs[e].get_goal_error()
+        return np.copy(self.buf_goal_errs)
+
+    def get_dt(self):
+        for e in range(self.num_envs):
+            self.buf_dts[e] = self.envs[e].get_dt() 
+        return np.copy(self.buf_dts)
+
+
 
     def reset(self):
         for e in range(self.num_envs):
