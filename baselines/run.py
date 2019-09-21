@@ -23,6 +23,10 @@ from mountain_car import mountain_car_train
 from mountain_car import mountain_car_test
 from car_retrieval import car_retrieval_train
 from car_retrieval import car_retrieval_test 
+from acrobot import acrobot_train 
+from acrobot import acrobot_test
+from quad import quad_train 
+from quad import quad_test 
 from pdb import set_trace
 try:
     from mpi4py import MPI
@@ -250,12 +254,12 @@ def eval_trained_model(model, env):
 
             episode_total_time += dt 
 
+            goal_err = env.get_goal_error()
+            episode_goal_error = goal_err[0] if isinstance(env, VecEnv) else goal_err
+
             #env.render()
             done = done.any() if isinstance(done, np.ndarray) else done
-            if done:
-                
-                goal_err = env.get_goal_error()
-                episode_goal_error = goal_err[0] if isinstance(env, VecEnv) else goal_err
+            if done: 
                 obs = env.reset()
 
                 print(ep, ":", episode_rew, episode_safe_error, episode_time_safe, episode_goal_error, episode_total_time)
