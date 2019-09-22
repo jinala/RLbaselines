@@ -27,6 +27,8 @@ from acrobot import acrobot_train
 from acrobot import acrobot_test
 from quad import quad_train 
 from quad import quad_test 
+from quad_reactive import quad_r_train 
+from quad_reactive import quad_r_test
 from pdb import set_trace
 try:
     from mpi4py import MPI
