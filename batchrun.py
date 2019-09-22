@@ -25,12 +25,14 @@ def batch_arg_parse():
   parser = arg_parser()
   parser.add_argument('--num_runs', help='Number ofruns ', default=1, type=int)
   parser.add_argument('--log_path', help='Directory to save learning curve data.', default="./", type=str)
+  parser.add_argument('--env', help='Env.', default="CarRetrievalTrain-v0", type=str)
+  parser.add_argument('--alg', help='Env.', default="ppo2", type=str)
   return parser
 
 def main(args):
   parser = batch_arg_parse()
   args, unknown_args = parser.parse_known_args(args)
-  runjobs(args.num_runs, args.log_path)
+  runjobs(args.num_runs, args.log_path, args.alg, args.env)
 
 '''
 Complete n subs, executing at mosmt maxn at once
