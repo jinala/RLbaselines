@@ -28,12 +28,13 @@ def batch_arg_parse():
   parser.add_argument('--log_path', help='Directory to save learning curve data.', default="./", type=str)
   parser.add_argument('--env', help="Name of the environment", default="CarRetrievalTrain-v0", type=str)
   parser.add_argument('--num_timesteps', help="Number of timesteps to train for", default=1e6, type = float )
+  parser.add_argument('--alg', help='Env.', default="ppo2", type=str)
   return parser
 
 def main(args):
   parser = batch_arg_parse()
   args, unknown_args = parser.parse_known_args(args)
-  runjobs(args.env, args.num_runs, args.log_path, args.num_timesteps)
+  runjobs(args.env, args.num_runs, args.log_path, args.num_timesteps, args.alg)
 
 '''
 Complete n subs, executing at mosmt maxn at once
@@ -53,7 +54,7 @@ def runjobs(env = "CarRetrievalTrain-v0", num_runs = 2, log_path = 'myfile', num
                " --num_timesteps={}".format(num_timesteps) + \
                " --log_path={}".format(run_log_path) + \
                " --save_path={}".format(path.join(run_log_path, "model.pkl;"))
-    program +=  " python -m baselines.run" + \
+    '''program +=  " python -m baselines.run" + \
                " --alg={}".format(alg) + \
                " --env={}".format(env) + \
                " --num_timesteps={}".format(0) + \
@@ -66,7 +67,7 @@ def runjobs(env = "CarRetrievalTrain-v0", num_runs = 2, log_path = 'myfile', num
                " --env={}".format(test_env) + \
                " --num_timesteps={}".format(0) + \
                " --load_path={}".format(path.join(run_log_path, "model.pkl")) + \
-               " --eval;"
+               " --eval;"'''
     '''test_env_v1 = copy.copy(test_env)
     test_env_v1 = test_env_v1.replace("v0", "v1")
     program +=  " python -m baselines.run" + \
