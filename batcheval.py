@@ -21,19 +21,20 @@ def batch_arg_parse():
   parser = arg_parser()
   parser.add_argument('--log_path', help='Directory to save learning curve data.', default="./", type=str)
   parser.add_argument('--env', help="Name of the environment", default="CarRetrievalTrain-v0", type=str)
+  parser.add_argument('--network', help="Network", default="mlp", type=str)
   return parser
 
 def main(args):
   parser = batch_arg_parse()
   args, unknown_args = parser.parse_known_args(args)
-  runjobs(args.env, args.log_path)
+  runjobs(args.env, args.log_path, args.network)
 
 '''
 Complete n subs, executing at mosmt maxn at once
 
 python batchrun.py num_runs=2 log_path="ok"
 '''
-def runjobs(env = "CarRetrievalTrain-v0",  log_path = 'myfile', alg = "ppo2", **kwargs):
+def runjobs(env = "CarRetrievalTrain-v0",  log_path = 'myfile', network = "mlp", alg = "ppo2", **kwargs):
   
 
 	log_path = path.join(log_path)
@@ -46,6 +47,7 @@ def runjobs(env = "CarRetrievalTrain-v0",  log_path = 'myfile', alg = "ppo2", **
 		program =  " python -m baselines.run" + \
 				   " --alg={}".format(alg) + \
 				   " --env={}".format(env) + \
+				   " --network={}".format(network) + \
 				   " --num_timesteps={}".format(0) + \
 				   " --load_path={}".format(path.join(folder, "model.pkl")) + \
 				   " --eval;"
@@ -54,6 +56,7 @@ def runjobs(env = "CarRetrievalTrain-v0",  log_path = 'myfile', alg = "ppo2", **
 		program +=  " python -m baselines.run" + \
 				   " --alg={}".format(alg) + \
 				   " --env={}".format(test_env) + \
+				   " --network={}".format(network) + \
 				   " --num_timesteps={}".format(0) + \
 				   " --load_path={}".format(path.join(folder, "model.pkl")) + \
 				   " --eval;"

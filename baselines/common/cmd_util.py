@@ -173,6 +173,7 @@ def common_arg_parser():
     parser.add_argument('--log_path', help='Directory to save learning curve data.', default=None, type=str)
     parser.add_argument('--play', default=False, action='store_true')
     parser.add_argument('--eval', default=False, action='store_true')
+    parser.add_argument('--traj', default=False, action='store_true')
     return parser
 
 def robotics_arg_parser():

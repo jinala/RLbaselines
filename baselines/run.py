@@ -218,10 +218,33 @@ def configure_logger(log_path, **kwargs):
     else:
         logger.configure(**kwargs)
 
+def traj(model, env):
+    obs = env.reset()
+
+    state = model.initial_state if hasattr(model, 'initial_state') else None
+    
+    while True:
+        if state is not None:
+            actions, _, state, _ = model.step(obs,S=state, M=dones)
+        else:
+            actions, _, _, _ = model.step(obs)
+
+        obs, rew, done, _ = env.step(actions)
+       
+       
+        #env.render()
+        done = done.any() if isinstance(done, np.ndarray) else done
+        if done: 
+            obs = env.reset()
+            break 
+
+    return
+
 def eval_trained_model(model, env):
     obs = env.reset()
 
     state = model.initial_state if hasattr(model, 'initial_state') else None
+    dones = np.zeros((1,))
     
     num_episodes = 1000 
 
@@ -230,6 +253,7 @@ def eval_trained_model(model, env):
     total_time_safe = 0
     total_time_to_goal = 0
     total_rew = 0 
+    total_correct = 0
 
     for ep in range(num_episodes):
         episode_rew = 0
@@ -268,6 +292,8 @@ def eval_trained_model(model, env):
 
                 if episode_safe_error < 0.05:
                     num_safe += 1
+                    if episode_goal_error < 0.1:
+                        total_correct += 1
 
                 total_goal_error += episode_goal_error 
                 total_time_safe += episode_time_safe
@@ -280,9 +306,11 @@ def eval_trained_model(model, env):
     total_time_safe = total_time_safe/float(num_episodes)
     total_time_to_goal = total_time_to_goal/float(num_episodes)
     total_rew = total_rew/float(num_episodes)
+    total_correct = total_correct/float(num_episodes)
 
-    print("Average: ", total_rew, num_safe, total_time_safe, total_goal_error, total_time_to_goal)
+    print("Average: ", total_rew, num_safe, total_time_safe, total_goal_error, total_time_to_goal, total_correct)
     return
+
 
 def main(args):
     # configure logger, disable logging in child MPI processes (with rank > 0)
@@ -331,6 +359,10 @@ def main(args):
     if args.eval:
         logger.log("Evaluating trained model")
         eval_trained_model(model, env)
+
+    if args.traj:
+        logger.log("Getting traj from trained model")
+        traj(model, env)
 
     env.close()
 

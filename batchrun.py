@@ -29,19 +29,20 @@ def batch_arg_parse():
   parser.add_argument('--env', help="Name of the environment", default="CarRetrievalTrain-v0", type=str)
   parser.add_argument('--num_timesteps', help="Number of timesteps to train for", default=1e6, type = float )
   parser.add_argument('--alg', help='Env.', default="ppo2", type=str)
+  parser.add_argument('--network', help="Network", default="mlp", type=str)
   return parser
 
 def main(args):
   parser = batch_arg_parse()
   args, unknown_args = parser.parse_known_args(args)
-  runjobs(args.env, args.num_runs, args.log_path, args.num_timesteps, args.alg)
+  runjobs(args.env, args.num_runs, args.log_path, args.num_timesteps, args.alg, args.network)
 
 '''
 Complete n subs, executing at mosmt maxn at once
 
 python batchrun.py num_runs=2 log_path="ok"
 '''
-def runjobs(env = "CarRetrievalTrain-v0", num_runs = 2, log_path = 'myfile', num_timesteps="1e6", alg = "ppo2", **kwargs):
+def runjobs(env = "CarRetrievalTrain-v0", num_runs = 2, log_path = 'myfile', num_timesteps="1e6", alg = "ppo2", network="mlp", **kwargs):
   for i in range(num_runs):
     rnd_str = random_string(5)
     # set_trace()
@@ -51,6 +52,7 @@ def runjobs(env = "CarRetrievalTrain-v0", num_runs = 2, log_path = 'myfile', num
     program = "python -m baselines.run" + \
                " --alg={}".format(alg) + \
                " --env={}".format(env) + \
+               " --network={}".format(network) + \
                " --num_timesteps={}".format(num_timesteps) + \
                " --log_path={}".format(run_log_path) + \
                " --save_path={}".format(path.join(run_log_path, "model.pkl;"))

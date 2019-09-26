@@ -42,7 +42,8 @@ def car_retrieval_train():
     print("lr: ", lr)
     return dict(
         # horizon = rand_int_linspace(32, 500),
-        nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
+        #nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256]),
+        nminibatches = 1, # for lstm
         ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
         noptepochs = rand_int_linspace(3, 36),
         cliprange = rand_elem([0.1, 0.2, 0.3]),
@@ -50,19 +51,97 @@ def car_retrieval_train():
         lr = lambda f : f * lr
     )
 
-'''def pendulum_train():
+'''
+# best params for car retrieval bench
+def car_retrieval_train():
+    lr = 0.002
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 128,
+        ent_coef = 0.01,
+        noptepochs = 33,
+        cliprange = 0.1,
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+def car_retrieval_train1():
+    lr = 0.002
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 128,
+        ent_coef = 0.01,
+        noptepochs = 33,
+        cliprange = 0.1,
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+
+def car_retrieval_train2():
+    lr = 0.002
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 128,
+        ent_coef = 0.01,
+        noptepochs = 33,
+        cliprange = 0.1,
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+def car_retrieval_train3():
+    lr = 0.002
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 128,
+        ent_coef = 0.01,
+        noptepochs = 33,
+        cliprange = 0.1,
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+def car_retrieval_train4():
+    lr = 0.002
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 128,
+        ent_coef = 0.01,
+        noptepochs = 33,
+        cliprange = 0.1,
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+def car_retrieval_train5():
+    lr = 0.002
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 128,
+        ent_coef = 0.01,
+        noptepochs = 33,
+        cliprange = 0.1,
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )'''
+
+def pendulum_train():
     lr = unif_range(0.003, 5e-6)
     print("lr: ", lr)
     return dict(
         # horizon = rand_int_linspace(32, 500),
-        nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
+        #nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
+        nminibatches = 1, #for lstm
         ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
         noptepochs = rand_int_linspace(3, 36),
         cliprange = rand_elem([0.1, 0.2, 0.3]),
         gamma = 0.99,
         lr = lambda f : f * lr
-    )'''
+    )
 
+'''
 # best version for pendulum
 def pendulum_train():
     lr = 0.0003
@@ -74,14 +153,14 @@ def pendulum_train():
         cliprange = 0.1,
         gamma = 0.99,
         lr = lambda f : f * lr
-    )
+    )'''
 
 def mountain_car_train():
     lr = unif_range(0.003, 5e-6)
     print("lr: ", lr)
     return dict(
         # horizon = rand_int_linspace(32, 500),
-        nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
+        nminibatches = 1, #rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
         ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
         noptepochs = rand_int_linspace(3, 36),
         cliprange = rand_elem([0.1, 0.2, 0.3]),
@@ -94,7 +173,8 @@ def quad_train():
     print("lr: ", lr)
     return dict(
         # horizon = rand_int_linspace(32, 500),
-        nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256]),
+        #nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256]),
+        nminibatches=1, # for lstm
         ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
         noptepochs = rand_int_linspace(3, 36),
         cliprange = rand_elem([0.1, 0.2, 0.3]),
@@ -107,7 +187,33 @@ def quad_r_train():
     print("lr: ", lr)
     return dict(
         # horizon = rand_int_linspace(32, 500),
-        nminibatches = rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256]),
+        nminibatches = 1,  #rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256]),
+        ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
+        noptepochs = rand_int_linspace(3, 36),
+        cliprange = rand_elem([0.1, 0.2, 0.3]),
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+
+def acrobot_train():
+    lr = unif_range(0.003, 5e-6)
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 1, #rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
+        ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
+        noptepochs = rand_int_linspace(3, 36),
+        cliprange = rand_elem([0.1, 0.2, 0.3]),
+        gamma = 0.99,
+        lr = lambda f : f * lr
+    )
+
+def cartpole_train():
+    lr = unif_range(0.003, 5e-6)
+    print("lr: ", lr)
+    return dict(
+        # horizon = rand_int_linspace(32, 500),
+        nminibatches = 1, #rand_elem([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]),
         ent_coef = rand_elem([0.0, 0.01, 0.05, 0.1]),
         noptepochs = rand_int_linspace(3, 36),
         cliprange = rand_elem([0.1, 0.2, 0.3]),
