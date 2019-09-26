@@ -1,0 +1,7 @@
+
+for i in cartpole_results/*; do echo $i; cat $i/progress.csv | tail -n1 | awk -F ',' '{ print $1 " " $2  " " $13 }' ; done  
+
+for i in cartpole_results/*; do echo $i; grep "Average:" $i/eval.out  ; done 
+
+
+
